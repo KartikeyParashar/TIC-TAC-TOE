@@ -2,6 +2,8 @@ echo "------------------------------------------------Welcome to TIC-TAC-TOE Gam
 
 declare -A board
 
+check=$((RANDOM%2))
+
 function display_board()
 {
 	for(( num=1; num<=3;  num++ ))
@@ -13,4 +15,18 @@ function display_board()
 	done
 }
 
+function assignment_of_value()
+{
+	if [ $check -eq 1 ]
+	then
+		player="X"
+		computer="0"
+	else
+		player="0"
+		computer="X"
+	fi
+}
+
 display_board
+assignment_of_value
+
