@@ -4,6 +4,7 @@ declare -A board
 
 check=$((RANDOM%2))
 
+
 function display_board()
 {
 	for(( num=1; num<=3;  num++ ))
@@ -17,6 +18,8 @@ function display_board()
 
 function assignment_of_value()
 {
+	#player=1
+	#computer=0
 	if [ $check -eq 1 ]
 	then
 		player="X"
@@ -27,6 +30,19 @@ function assignment_of_value()
 	fi
 }
 
+function toss()
+{
+	#player=1
+	#computer=0
+	if [ $check -eq 1 ]
+	then
+		echo "Player has won the toss"
+	else
+		echo "Computer has won the toss"
+	fi
+}
+
+
 display_board
 assignment_of_value
-
+toss
