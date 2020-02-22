@@ -27,7 +27,6 @@ function assign_symbol()
 	if [ $check -eq 1 ]
 	then
 		player="X"
-		computer="0"
 	else
 		player="0"
 		computer="X"
@@ -65,7 +64,7 @@ function checkEmptyCell()
 {
 	read -p "Enter row: " row
 	read -p "Enter column: " column
-	
+
 	if [ ${board[$row,$column]} == "-" ]
 	then
 		board[$row,$column]=$player
@@ -76,10 +75,50 @@ function checkEmptyCell()
 	fi
 }
 
+function checkWin()
+{
+	for (( num=1; num<=3; num++ ))
+	do
+		for (( num_in=1; num_in<=3; num_in++ ))
+		do
+			checkHorizontal=${board[$num,$num_in]}${board[$num,$(( $num_in + 1 ))]}${board[$num,$(( $num_in + 2 ))]}
+			if [[ $checkHorizontal == "$player$player$player" ]]
+			then
+				echo $checkHorizontal
+				echo "YOU WON"
+				exit
+			fi
+
+			checkVertical=${board[$num_in,$num]}${board[$(( $num_in + 1 )),$num]}${board[$(( $num_in + 2 )),$num]}
+			if [[ $checkVertical == "$player$player$player" ]]
+			then
+				echo "YOU WIN"
+				exit
+			fi
+
+			checkDiagonal1=${board[$num,$num_in]}${board[$(( $num + 1 )),$(( $num_in + 1 ))]}${board[$(( $num + 2 )),$(( $num_in + 2 ))]}
+			checkDiagonal2=${board[$num,$(( $num_in + 2 ))]}${board[$(( $num + 1 )),$(( $num_in + 1 ))]}${board[$(( $num + 2 )),$num_in]}
+			if [[ $checkDiagonal1 == "$player$player$player" ]]
+			then
+				echo "YOU WIN"
+				exit
+			fi
+
+			if  [[ $checkDiagonal2 == "$player$player$player" ]]
+			then 
+				echo "YOU WIN"
+				exit
+			fi
+		done
+	done
+}
+
+
 assign_symbol
 reset_board
 
 while [ $movecount -le $TOTALCOUNT ]
 do
 		checkEmptyCell
+		checkWin
 done
