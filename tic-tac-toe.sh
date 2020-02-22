@@ -4,19 +4,23 @@ declare -A board
 
 check=$((RANDOM%2))
 
+TOTALCOUNT=9
 
-function display_board()
+movecount=1
+
+
+function reset_board()
 {
-	for(( num=1; num<=3;  num++ ))
+	for(( num=1; num<=3; num++ ))
 	do
 		for(( num_in=1; num_in<=3; num_in++ ))
 		do
-			board[$num,$num_in]=""
+			board[$num,$num_in]="-"
 		done
 	done
 }
 
-function assignment_of_value()
+function assign_symbol()
 {
 	#player=1
 	#computer=0
@@ -42,7 +46,40 @@ function toss()
 	fi
 }
 
+function display_board()
+{
+	echo "-------------------------------------------------------------------------------------------------------------------------------------"
+	for (( num=1; num<=3; num++ ))
+	do
+		for (( num_in=1; num_in<=3; num_in++ ))
+		do
+			echo -n "| ${board[$num,$num_in]} "
+		done
+		echo "|"
+		echo "--------------"
+	done
+}
 
-display_board
-assignment_of_value
-toss
+
+function checkEmptyCell()
+{
+	read -p "Enter row: " row
+	read -p "Enter column: " column
+	
+	if [ ${board[$row,$column]} == "-" ]
+	then
+		board[$row,$column]=$player
+		((movecount++))
+		display_board
+	else
+		echo "Position Occupied or Invalid Position"
+	fi
+}
+
+assign_symbol
+reset_board
+
+while [ $movecount -le $TOTALCOUNT ]
+do
+		checkEmptyCell
+done
