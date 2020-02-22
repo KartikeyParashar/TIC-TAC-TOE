@@ -27,10 +27,13 @@ function assign_symbol()
 	if [ $check -eq 1 ]
 	then
 		player="X"
+		computer="0"
 	else
 		player="0"
 		computer="X"
 	fi
+	echo "Player has --> $player value assigned"
+	echo "Computer has --> $computer value assigned"
 }
 
 function toss()
@@ -47,7 +50,7 @@ function toss()
 
 function display_board()
 {
-	echo "-------------------------------------------------------------------------------------------------------------------------------------"
+
 	for (( num=1; num<=3; num++ ))
 	do
 		for (( num_in=1; num_in<=3; num_in++ ))
@@ -55,7 +58,7 @@ function display_board()
 			echo -n "| ${board[$num,$num_in]} "
 		done
 		echo "|"
-		echo "--------------"
+		echo "______________"
 	done
 }
 
@@ -84,41 +87,103 @@ function checkWin()
 			checkHorizontal=${board[$num,$num_in]}${board[$num,$(( $num_in + 1 ))]}${board[$num,$(( $num_in + 2 ))]}
 			if [[ $checkHorizontal == "$player$player$player" ]]
 			then
-				echo $checkHorizontal
 				echo "YOU WON"
+				exit
+			elif [[ $checkHorizontal == "$computer$computer$computer" ]]
+			then
+			 	echo "COMPUTER WON"
 				exit
 			fi
 
 			checkVertical=${board[$num_in,$num]}${board[$(( $num_in + 1 )),$num]}${board[$(( $num_in + 2 )),$num]}
 			if [[ $checkVertical == "$player$player$player" ]]
 			then
-				echo "YOU WIN"
+				echo "YOU WON"
+				exit
+			elif [[ $checkVertical == "$computer$computer$computer" ]]
+			then
+				echo "COMPUTER WON"
 				exit
 			fi
 
 			checkDiagonal1=${board[$num,$num_in]}${board[$(( $num + 1 )),$(( $num_in + 1 ))]}${board[$(( $num + 2 )),$(( $num_in + 2 ))]}
 			checkDiagonal2=${board[$num,$(( $num_in + 2 ))]}${board[$(( $num + 1 )),$(( $num_in + 1 ))]}${board[$(( $num + 2 )),$num_in]}
+
 			if [[ $checkDiagonal1 == "$player$player$player" ]]
 			then
 				echo "YOU WIN"
 				exit
+			elif [[ $checkDiagonal1 == "$computer$computer$computer" ]]
+			then
+				echo "COMPUTER WIN"
+				exit
 			fi
 
 			if  [[ $checkDiagonal2 == "$player$player$player" ]]
-			then 
+			then
 				echo "YOU WIN"
+				exit
+			elif [[ $checkDiagonal2 == "$computer$computer$computer" ]]
+			then
+				echo "COMPUTER WIN"
 				exit
 			fi
 		done
 	done
 }
 
+function tie_game()
+{
+	if [[ $movecount -eq $TOTALCOUNT ]]
+	then
+		echo "MATCH TIE!!!"
+		exit
+	fi
+}
+
+function player_turn()
+{
+	echo "-------------------------------------------------------PLAYER TURN--------------------------------------------------------------------"
+	read -p "Enter row: " row
+	read -p "Enter column: " column
+	if [[ ${board[$row,$column]} == "-" ]]
+	then
+		board[$row,$column]=$player
+		((movecount++))
+		display_board
+		echo "@ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $ @ $"
+		checkWin
+		computer_turn
+	else
+		echo "Position Occupied or Invalid Position for user"
+		tie_game
+		player_turn
+	fi
+}
+
+function computer_turn()
+{
+	echo "--------------------------------------------------------COMPUTER TURN-----------------------------------------------------------------"
+	row=$(( ( RANDOM % 3 ) + 1 ))
+	column=$(( ( RANDOM % 3 ) + 1 ))
+		if [[ ${board[$row,$column]} == "-" ]]
+		then
+			board[$row,$column]=$computer
+			((movecount++))
+			display_board
+			checkWin
+			player_turn
+		else
+			echo "Position Occupied"
+			tie_game
+			computer_turn
+		fi
+}
 
 assign_symbol
 reset_board
 
-while [ $movecount -le $TOTALCOUNT ]
+while [[ $movecount -ne $TOTALCOUNT ]]
 do
-		checkEmptyCell
-		checkWin
+	computer_turn
 done
