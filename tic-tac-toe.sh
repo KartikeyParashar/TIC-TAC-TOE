@@ -310,6 +310,7 @@ function computer_turn()
 	if [ $block -eq 0 ]
 	then
 		computer_block_check
+		check_corners
 	fi
 	if [ $block -eq 0 ]
 	then
@@ -325,8 +326,26 @@ function computer_turn()
 	fi
 	((movecount++))
 	display_board
+	checkWin
 	tie_game
 	player_turn
+}
+
+function check_corners()
+{
+	block=0
+	for (( num=1; num<=3; num=$(( $num + 2 )) ))
+	do
+		for (( num_in=1; num_in<=3; num_in=$(( $num_in + 2 )) ))
+		do
+			if [[ ${board[$num,$num_in]} == "-" ]]
+			then
+				board[$num,$num_in]=$computer
+				block=1
+				return
+			fi
+		done
+	done
 }
 
 assign_symbol
