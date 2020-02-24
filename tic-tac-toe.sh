@@ -140,15 +140,15 @@ function computer_win_check()
 		for (( j=1; j<=3; j++ ))
 		do
 #........Horizontal...........................................................................................................................
-			if [[ ${board[$num,$j]} == "-" && ${board[$num,$(( $j + 1 ))]} == $computer && {board[$num,$(( $j + 2 ))]} == $computer ]]
+			if [[ ${board[$num,$j]} == "-" && ${board[$num,$(( $j + 1 ))]} == $computer && ${board[$num,$(( $j + 2 ))]} == $computer ]]
 			then
 				board[$num,$j]=$computer
 				block=1
-			elif [[ ${board[$num,$j]} == $computer && ${board[$num,$(( $j + 1 ))]} == "-" && {board[$num,$(( $j + 2 ))]} == $computer ]]
+			elif [[ ${board[$num,$j]} == $computer && ${board[$num,$(( $j + 1 ))]} == "-" && ${board[$num,$(( $j + 2 ))]} == $computer ]]
 			then
 				board[$num,$(( $j + 1 ))]=$computer
 				block=1
-			elif [[ ${board[$num,$j]} == $computer && ${board[$num,$(( $j + 1 ))]} == $computer && {board[$num,$(( $j + 2 ))]} == "-" ]]
+			elif [[ ${board[$num,$j]} == $computer && ${board[$num,$(( $j + 1 ))]} == $computer && ${board[$num,$(( $j + 2 ))]} == "-" ]]
 			then
 				board[$num,$(( $j + 2 ))]=$computer
 				block=1
@@ -174,7 +174,7 @@ function computer_win_check()
 				block=1
 			elif [[ ${board[$num,$j]} == $computer && ${board[$(( $num + 1 )),$(( $j + 1 ))]} == "-" && ${board[$(( $num + 2 )),$(( $j + 2 ))]} == $computer ]]
 			then
-				board[$(( $num + 1 )),$(( $j + 1 ))]}=$computer
+				board[$(( $num + 1 )),$(( $j + 1 ))]=$computer
 				block=1
 			elif [[ ${board[$num,$j]} == $computer && ${board[$(( $num + 1 )),$(( $j + 1 ))]} == $computer && ${board[$(( $num + 2 )),$(( $j + 2 ))]} == "-" ]]
 			then
@@ -212,15 +212,15 @@ function computer_block_check()
 		for (( j=1; j<=3; j++ ))
 		do
 #........Horizontal...........................................................................................................................
-			if [[ ${board[$num,$j]} == "-" && ${board[$num,$(( $j + 1 ))]} == $player && {board[$num,$(( $j + 2 ))]} == $player ]]
+			if [[ ${board[$num,$j]} == "-" && ${board[$num,$(( $j + 1 ))]} == $player && ${board[$num,$(( $j + 2 ))]} == $player ]]
 			then
 				board[$num,$j]=$computer
 				block=1
-			elif [[ ${board[$num,$j]} == $player && ${board[$num,$(( $j + 1 ))]} == "-" && {board[$num,$(( $j + 2 ))]} == $player ]]
+			elif [[ ${board[$num,$j]} == $player && ${board[$num,$(( $j + 1 ))]} == "-" && ${board[$num,$(( $j + 2 ))]} == $player ]]
 			then
 				board[$num,$(( $j + 1 ))]=$computer
 				block=1
-			elif [[ ${board[$num,$j]} == $player && ${board[$num,$(( $j + 1 ))]} == $player && {board[$num,$(( $j + 2 ))]} == "-" ]]
+			elif [[ ${board[$num,$j]} == $player && ${board[$num,$(( $j + 1 ))]} == $player && ${board[$num,$(( $j + 2 ))]} == "-" ]]
 			then
 				board[$num,$(( $j + 2 ))]=$computer
 				block=1
@@ -267,6 +267,10 @@ function computer_block_check()
 				board[$num,$j]=$computer
 				block=1
 			fi
+			if [ $block -eq 1 ]
+			then
+				return
+			fi 
 		done
 	done
 }
@@ -305,8 +309,8 @@ function player_turn()
 function computer_turn()
 {
 	echo "--------------------------------------------------------COMPUTER TURN-----------------------------------------------------------------"
-	checkWin
 	computer_win_check
+	checkWin
 	if [ $block -eq 0 ]
 	then
 		computer_block_check
@@ -397,5 +401,5 @@ reset_board
 
 while [[ $movecount -ne $TOTALCOUNT ]]
 do
-	computer_turn
+		computer_turn
 done
