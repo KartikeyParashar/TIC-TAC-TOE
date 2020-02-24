@@ -310,7 +310,14 @@ function computer_turn()
 	if [ $block -eq 0 ]
 	then
 		computer_block_check
+	fi
+	if [ $block -eq 0 ]
+	then
 		check_corners
+	fi
+	if [ $block -eq 0 ]
+	then
+		check_center
 	fi
 	if [ $block -eq 0 ]
 	then
@@ -333,7 +340,6 @@ function computer_turn()
 
 function check_corners()
 {
-	block=0
 	for (( num=1; num<=3; num=$(( $num + 2 )) ))
 	do
 		for (( num_in=1; num_in<=3; num_in=$(( $num_in + 2 )) ))
@@ -346,6 +352,15 @@ function check_corners()
 			fi
 		done
 	done
+}
+
+function check_center()
+{
+	if [[ ${board[2,2]} == "-" ]]
+	then
+		board[2,2]=$computer
+		block=1
+	fi
 }
 
 assign_symbol
