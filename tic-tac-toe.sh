@@ -321,6 +321,10 @@ function computer_turn()
 	fi
 	if [ $block -eq 0 ]
 	then
+		check_sides
+	fi
+	if [ $block -eq 0 ]
+	then
 		row=$(( ( RANDOM % 3 ) + 1 ))
 		column=$(( ( RANDOM % 3 ) + 1 ))
 			if [[ ${board[$row,$column]} == "-" ]]
@@ -360,6 +364,31 @@ function check_center()
 	then
 		board[2,2]=$computer
 		block=1
+	fi
+}
+
+function check_sides()
+{
+	if [[ ${board[1,2]} == "-" ]]
+	then
+		board[1,2]=$computer
+		block=1
+		return
+	elif [[ ${board[2,1]} == "-" ]]
+	then
+		board[2,1]=$computer
+		block=1
+		return
+	elif [[ ${board[2,3]} == "-" ]]
+	then
+		board[2,3]=$computer
+		block=1
+		return
+	elif [[ ${board[3,2]} == "-" ]]
+	then
+		board[3,2]=$computer
+		block=1
+		return
 	fi
 }
 
